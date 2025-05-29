@@ -39,8 +39,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
+    'rest_framework.authtoken',
     'example',
-    'workout'
+    'workout',
+    'user_records',
+    'userinfo',
 ]
 
 MIDDLEWARE = [
@@ -133,3 +137,7 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.TokenAuthentication',
     ]
 }
+
+INTERNAL_IPS = [
+    "127.0.0.1",
+]
