@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'workout',
     'user_records',
     'userinfo',
+    'chat',
 ]
 
 MIDDLEWARE = [
