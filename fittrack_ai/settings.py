@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'user_records',
     'userinfo',
     'chat',
+    'knowledge',
 ]
 
 MIDDLEWARE = [
