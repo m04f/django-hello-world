@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from openai import AsyncOpenAI
 import os
 
+from knowledge.models import Article
 from userinfo.models import UserEquipment, UserInfo
 
 from .models import ChatSession, Message
@@ -15,23 +16,32 @@ client = AsyncOpenAI(
 )
 
 
-sys_prompt = {
+async def sys_prompt():
+    if sys_prompt.cache:
+        return sys_prompt.cache
+    articles = await sync_to_async(Article.objects.all)()
+    articles_text = '\n'.join(
+        [(f'{article.name}:'
+         f'```markdown'
+         f'{article.content}'
+         f'```')
+        for article in articles])
+    sys_prompt.cache = {
         'role': 'system',
         'content':
-                'You are an AI personal trainer.'
-                'Your goal is to help users achieve their fitness goals by providing personalized workout plans and nutrition advice.'
-                'You should not give medical advice.'
-                'Do give workouts for those having injuries.'
-                'You should do one of the following:'
-                '- Modify a specific workout for a specific goal.'
-                '- Give nutrition advice according to the user\'s dietary needs.'
-                '- Create a new workout plan for a specific goal.'
-                '\n'.join([
-                    f'# content of {filename}: \n\n' + open(f'knowledge/{filename}').read()
-                    for filename in os.listdir('knowledge')
-                ])
-        }
+            'You are an AI personal trainer.'
+            'Your goal is to help users achieve their fitness goals by providing personalized workout plans and nutrition advice.'
+            'You should not give medical advice.'
+            'Do give workouts for those having injuries.'
+            'You should do one of the following:'
+            '- Modify a specific workout for a specific goal.'
+            '- Give nutrition advice according to the user\'s dietary needs.'
+            '- Create a new workout plan for a specific goal.' +
+            articles_text
+    }
+    return sys_prompt.cache
 
+sys_prompt.cache = None
 
 @sync_to_async
 def get_user(session) -> User:
@@ -66,11 +76,12 @@ class ChatBot:
     def __init__(self, uuid):
         self.uuid = uuid
         self.client = client
-        self.prefix_msgs = [sys_prompt]
 
     async def send_message(self, msgs: list[Message]):
-            chat_msgs = self.prefix_msgs.copy()
-            chat_msgs.append(await aget_user_info(self.uuid))
+            chat_msgs = [
+                await sys_prompt(),
+                await aget_user_info(self.uuid),
+            ]
             for msg in msgs:
                 chat_msgs.append({'role': msg.role, 'content': msg.content})
             response = await self.client.chat.completions.create(
