@@ -25,7 +25,7 @@ async def sys_prompt():
          f'```markdown'
          f'{article.content}'
          f'```')
-        for article in articles])
+        async for article in Article.objects.all()])
     sys_prompt.cache = {
         'role': 'system',
         'content':
