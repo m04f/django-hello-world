@@ -7,3 +7,4 @@ djoser==2.3.1
 django-cors-headers==4.7.0
 channels==4.2.2
 openai==1.78.1
+daphne
