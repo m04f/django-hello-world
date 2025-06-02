@@ -9,3 +9,4 @@ channels==4.2.2
 openai==1.78.1
 daphne
 gunicorn
+uvicorn
