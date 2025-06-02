@@ -7,6 +7,14 @@ databases:
 services:
   - type: web
     plan: free
+    name: fittrack
+    runtime: node
+    buildCommand: npm install
+    startCommand: npm run dev
+    repo: https://github.com/m04f/fittrack-ai-frontend
+
+  - type: web
+    plan: free
     name: mysite
     runtime: python
     buildCommand: './build.sh'
