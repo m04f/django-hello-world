@@ -28,7 +28,6 @@ ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS = [
     'corsheaders',
-    'daphne',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -43,8 +42,6 @@ INSTALLED_APPS = [
     'chat',
     'knowledge',
 ]
-
-ASGI_APPLICATION = "fittrack_ai.asgi.application"
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
