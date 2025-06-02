@@ -6,7 +6,7 @@ ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
 # Set work directory
-WORKDIR /
+WORKDIR /app
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
@@ -14,15 +14,14 @@ RUN apt-get update && apt-get install -y \
     libpq-dev
 
 # Install Python dependencies
-COPY requirements.txt .
+COPY requirements.txt /app/
 RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
 
 # Copy project files
-COPY . .
+COPY . /app/
 
-# Collect static files
-RUN python manage.py collectstatic --noinput
+EXPOSE 8000
 
 # Run Gunicorn
-CMD ["python3", "manage.py", "runserver"]
+CMD ["gunicorn", "--bind", "0.0.0.0:8000", "fittrack_ai.wsgi:app"]
