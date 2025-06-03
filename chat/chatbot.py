@@ -19,7 +19,6 @@ client = AsyncOpenAI(
 async def sys_prompt():
     if sys_prompt.cache:
         return sys_prompt.cache
-    articles = await sync_to_async(Article.objects.all)()
     articles_text = '\n'.join(
         [(f'{article.name}:'
          f'```markdown'
@@ -31,8 +30,6 @@ async def sys_prompt():
         'content':
             'You are an AI personal trainer.'
             'Your goal is to help users achieve their fitness goals by providing personalized workout plans and nutrition advice.'
-            'You should not give medical advice.'
-            'Do give workouts for those having injuries.'
             'You should do one of the following:'
             '- Modify a specific workout for a specific goal.'
             '- Give nutrition advice according to the user\'s dietary needs.'
@@ -102,7 +99,7 @@ class ChatBot:
                     'content': str(await call_tool(tool))
                     })
                     response = await self.client.chat.completions.create(
-                    model=os.environ.get('LLM_MODEL'),
+                        model=os.environ.get('LLM_MODEL'),
                         messages=chat_msgs,
                     )
 
