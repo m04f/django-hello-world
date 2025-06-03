@@ -8,7 +8,7 @@ import uuid
 from rest_framework.generics import ValidationError
 
 class Exercise(models.Model):
-    name = models.CharField(max_length=100, unique=True)
+    name = models.CharField(max_length=100, unique=True, db_index=True)
     description = models.TextField(blank=True)
     muscles = models.ManyToManyField('Muscle', through='ExerciseMuscle')
     equipments = models.ManyToManyField('Equipment')
@@ -26,7 +26,7 @@ class ExerciseMuscle(models.Model):
 
 
 class Muscle(models.Model):
-    name = models.CharField(max_length=100, unique=True)
+    name = models.CharField(max_length=100, unique=True, db_index=True)
     description = models.TextField(blank=True)
     exercises = models.ManyToManyField('Exercise', through='ExerciseMuscle')
 
@@ -34,8 +34,8 @@ class Muscle(models.Model):
         return self.name
 
 class Workout(models.Model):
-    uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    creator = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
+    uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, db_index=True)
+    creator = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, db_index=True)
     name = models.CharField(max_length=100)
     description = models.TextField(blank=True)
     estimated_time = models.PositiveIntegerField(null=True)
