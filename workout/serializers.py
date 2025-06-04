@@ -131,7 +131,7 @@ class PlanWorkoutSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = PlanWorkout
-        fields = ['uuid', 'name', 'workout_uuid', 'workout', 'day', 'notes']
+        fields = ['uuid', 'plan', 'name', 'workout_uuid', 'workout', 'day', 'notes']
 
 
 class PlanSerializer(serializers.ModelSerializer):
