@@ -135,5 +135,6 @@ REST_FRAMEWORK = {
 
 CORS_ALLOWED_ORIGINS = [
     'https://fittrack-ai-frontend.vercel.app',
+    'https://m04f.github.io',
     'http://localhost:8080',
 ]
