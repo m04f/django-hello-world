@@ -5,6 +5,7 @@ import os
 
 from knowledge.models import Article
 from userinfo.models import UserEquipment, UserInfo
+from workout.serializers import Exercise
 
 from .models import ChatSession, Message
 from .tools import availableTools, call_tool
@@ -19,6 +20,9 @@ client = AsyncOpenAI(
 async def sys_prompt():
     if sys_prompt.cache:
         return sys_prompt.cache
+    available_exercises = '\n'.join(
+        [f'{exercise.name}: {exercise.description}'
+        async for exercise in Exercise.objects.all()])
     articles_text = '\n'.join(
         [(f'{article.name}:'
          f'```markdown'
@@ -34,6 +38,7 @@ async def sys_prompt():
             '- Modify a specific workout for a specific goal.'
             '- Give nutrition advice according to the user\'s dietary needs.'
             '- Create a new workout plan for a specific goal.' +
+            available_exercises +
             articles_text
     }
     return sys_prompt.cache

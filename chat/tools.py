@@ -30,34 +30,68 @@ async def call_tool(tool: ChatCompletionMessageToolCall):
 
 
 create_workout_tool = {
-    'type': 'function',
-    'function': {
-        'name': 'create_workout',
-        'description': 'Create a workout with specified exercises',
-        'parameters': {
-            'type': 'object',
-            'required': ['name', 'description', 'exercises'],
-            'properties': {
-                'name': {'type': 'string', 'description': 'The name of the workout'},
-                'description': {'type': 'string', 'description': 'A description of the workout'},
-                'exercises': {
-                    'type': 'array',
-                    'description': 'A list of exercise names with details',
-                    'items': {
-                        'type': 'object',
-                        'required': ['exercise_id', 'order'],
-                        'properties': {
-                            'exercise': {'type': 'string', 'description': 'Exercise name'},
-                            'reps': {'type': 'integer', 'description': 'The number of repetitions', 'nullable': True},
-                            'duration': {'type': 'integer', 'description': 'The duration in seconds', 'nullable': True},
-                            'weight': {'type': 'integer', 'description': 'The weight in kilograms', 'nullable': True},
-                            'sets': {'type': 'integer', 'description': 'The number of sets', 'default': 1},
-                            'rest': {'type': 'integer', 'description': 'The rest time in seconds', 'default': 120},
-                            'notes': {'type': 'string', 'description': 'Additional notes', 'nullable': True},
-                        }
+    "type": "function",
+    "function": {
+        "name": "create_workout",
+        "description": "Create a new workout with exercises",
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "description": "Name of the workout"
+                },
+                "description": {
+                    "type": "string",
+                    "description": "Description of the workout"
+                },
+                "exercises": {
+                    "type": "array",
+                    "description": "List of exercises in the workout",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "exercise": {
+                                "type": "string",
+                                "description": "Name of the exercise"
+                            },
+                            "reps": {
+                                "type": "integer",
+                                "description": "Number of repetitions (required if duration not provided)"
+                            },
+                            "duration": {
+                                "type": "integer",
+                                "description": "Duration in seconds (required if reps not provided)"
+                            },
+                            "sets": {
+                                "type": "integer",
+                                "description": "Number of sets",
+                                "default": 1
+                            },
+                            "weight": {
+                                "type": "integer",
+                                "description": "Weight in appropriate units"
+                            },
+                            "rest": {
+                                "type": "integer",
+                                "description": "Rest time between sets in seconds",
+                                "default": 120
+                            }
+                        },
+                        "required": ["exercise"]
                     }
+                },
+                "notes": {
+                    "type": "string",
+                    "description": "Additional notes for the workout"
+                },
+                "public": {
+                    "type": "boolean",
+                    "description": "Whether the workout is public",
+                    "default": True
                 }
-            }
+            },
+            "required": ["name", "exercises"]
         }
     }
 }
