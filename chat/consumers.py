@@ -39,6 +39,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 await self.send_message(db_message)
 
                 # Call the chat model
-                response = await self.bot.send_message(self.messages)
+                response = await self.bot.asend_message(self.messages)
                 await Message.objects.abulk_create(response)
                 await self.send_message(response[-1])

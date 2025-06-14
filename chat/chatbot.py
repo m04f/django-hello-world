@@ -1,4 +1,4 @@
-from asgiref.sync import sync_to_async
+from asgiref.sync import sync_to_async, async_to_sync
 from django.contrib.auth.models import User
 from openai import AsyncOpenAI
 import os
@@ -79,7 +79,10 @@ class ChatBot:
         self.uuid = uuid
         self.client = client
 
-    async def send_message(self, msgs: list[Message]):
+    def send_message(self, msgs: list[Message]) -> list[Message]:
+        return async_to_sync(self.asend_message)(msgs)
+
+    async def asend_message(self, msgs: list[Message]):
             chat_msgs = [
                 await sys_prompt(),
                 await aget_user_info(self.uuid),

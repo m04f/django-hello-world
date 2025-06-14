@@ -3,9 +3,12 @@ from rest_framework import serializers
 from .models import Message, ChatSession
 
 class MessageSerializer(serializers.ModelSerializer):
+    content = serializers.CharField(max_length=1000)
+    role = serializers.ChoiceField(choices=Message.ROLE_CHOICES)
+
     class Meta:
         model = Message
-        fields = ['id', 'content', 'role', 'timestamp']
+        fields = ['content', 'role', 'timestamp']
 
 class ChatSessionSerializer(serializers.ModelSerializer):
     details = serializers.HyperlinkedIdentityField(
